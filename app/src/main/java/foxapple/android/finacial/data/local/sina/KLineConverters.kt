@@ -1,23 +1,24 @@
-package foxapple.android.finacial.data.local
+package foxapple.android.finacial.data.local.sina
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.Calendar
 
 /**
  * Type converters to allow Room to reference complex data types.
  */
-class Converters {
+class KLineConverters {
     val gson = Gson()
     @TypeConverter
-    fun stringToObject(value: String): List<Any> {
-        val listType = object : TypeToken<List<Any>>() {}.type
+    fun stringToObject(value: String): List<KLineDetailData> {
+        val listType = object : TypeToken<List<KLineDetailData>>() {
+
+        }.type
         return gson.fromJson(value, listType)
     }
 
     @TypeConverter
-    fun objectToString(list: List<Any>): String {
+    fun objectToString(list: List<KLineDetailData>): String {
         return gson.toJson(list)
     }
 }

@@ -30,6 +30,9 @@ class MainActivity : AppCompatActivity() {
                 GetStockMinData().invoke(UseCase.None()) {
                     Log.d(tag, it.toString())
                 }
+                GetStockBasicInfo().invoke(UseCase.None()) {
+                    Log.d(tag, it.toString())
+                }
             }
         }
 
