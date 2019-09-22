@@ -9,12 +9,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object Retrofit2Service {
     val TU_SHARE_API: TuShareService = Retrofit.Builder()
-        .baseUrl("http://api.tushare.pro")
+        .baseUrl("https://api.tushare.pro")
         .addConverterFactory(GsonConverterFactory.create())
         .build().create(TuShareService::class.java)
 
     val SINA_API: SinaService = Retrofit.Builder()
-        .baseUrl("http://money.finance.sina.com.cn/quotes_service/api/json_v2.php/")
+        .baseUrl("https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/")
         .addConverterFactory(MyConverterFactory(Gson()))
         .build().create(SinaService::class.java)
 }

@@ -12,6 +12,7 @@ import java.io.Serializable
  * @param macd MACD
  */
 class KLineDetailData(
+    val date: Long,
     val open: Float,
     val high: Float,
     val low: Float,
@@ -19,7 +20,11 @@ class KLineDetailData(
     val volume: Int,
     var ma: HashMap<Int, Float>,
     var macd: MACD
-) : Serializable
+) : Serializable {
+    override fun toString(): String {
+        return "\nKLineDetailData(date=$date, open=$open, high=$high, low=$low, close=$close, volume=$volume, ma=$ma, macd=$macd)"
+    }
+}
 
 enum class MovingAverageData(val average: Int) {
     MA_5(5),
@@ -30,4 +35,6 @@ enum class MovingAverageData(val average: Int) {
     MA_144(144)
 }
 
-class MACD() : Serializable
+class MACD(
+    
+) : Serializable

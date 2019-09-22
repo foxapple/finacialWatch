@@ -2,9 +2,8 @@ package foxapple.android.finacial.data.local.sina
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.Query
 import androidx.room.OnConflictStrategy
-
+import androidx.room.Query
 
 
 /**
@@ -12,6 +11,9 @@ import androidx.room.OnConflictStrategy
  */
 @Dao
 interface StockKLineDao {
+    @Query("SELECT * FROM stock_kline_info WHERE id LIKE :id LIMIT 1")
+    fun getStockById(id: String): StockKLineInfo?
+
     @Query("SELECT * FROM stock_kline_info")
     fun getAllStorks(): List<StockKLineInfo>
 

@@ -36,12 +36,7 @@ class GetStockBasicInfo : UseCase<List<StockBasicInfo>, UseCase.None>() {
             val tuShareResponseVO = response.body()
             if (tuShareResponseVO.code == "0" && tuShareResponseVO.data != null) {
                 val field = tuShareResponseVO.data!!.fields!!
-                val result = tuShareResponseVO.data!!.items!!.map {
-                    getStockBasicInfoFromStringList(
-                        field,
-                        it
-                    )
-                }.sortedBy { it.symbol.toInt() }
+                val result = tuShareResponseVO.data!!.items!!.map { getStockBasicInfoFromStringList(field, it) }.sortedBy { it.symbol.toInt() }
                 StockBasicInfoRepository.getInstance().insetyStock(result)
                 Log.d(tag, StockBasicInfoRepository.getInstance().getStockBasicInfos().take(10).toString())
                 return Either.Right(result)

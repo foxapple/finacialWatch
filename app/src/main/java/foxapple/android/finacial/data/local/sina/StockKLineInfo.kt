@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import foxapple.android.finacial.data.local.tushare.StockBasicInfo
 
 /**
  * @param ts_code='000001.SZ'
@@ -22,14 +23,34 @@ data class StockKLineInfo(
     val name: String,
     val area: String,
     val industry: String,
-    val updateDate: String,
-    val min_5_data: List<KLineDetailData>,
-    val min_30_data: List<KLineDetailData>,
-    val min_60_data: List<KLineDetailData>,
-    val min_90_data: List<KLineDetailData>,
-    val day_data: List<KLineDetailData>,
-    val week_data: List<KLineDetailData>,
-    val month_data: List<KLineDetailData>
+    val updateDate: Long,
+    val min_5_data: MutableList<KLineDetailData>,
+    val min_30_data: MutableList<KLineDetailData>,
+    val min_60_data: MutableList<KLineDetailData>,
+    val day_data: MutableList<KLineDetailData>
 ) {
-    override fun toString() = "$symbol  $name"
+    companion object {
+        fun getKLineInfoFromBasicInfo(data: StockBasicInfo): StockKLineInfo {
+            return StockKLineInfo(
+                data.ts_code, data.symbol,
+                data.name, data.area, data.industry, System.currentTimeMillis(),
+                ArrayList(), ArrayList(), ArrayList(), ArrayList()
+            )
+        }
+    }
+
+    fun getKLineListByScale(scale: Int): MutableList<KLineDetailData> {
+        return when (scale) {
+            5 -> min_5_data
+            30 -> min_30_data
+            60 -> min_60_data
+            240 -> day_data
+            else -> ArrayList()
+        }
+    }
+
+    override fun toString(): String {
+        return "StockKLineInfo(ts_code='$ts_code', symbol='$symbol', name='$name', area='$area', industry='$industry', updateDate=$updateDate, min_5_data=$min_5_data, min_30_data=$min_30_data, min_60_data=$min_60_data, day_data=$day_data)"
+    }
+
 }

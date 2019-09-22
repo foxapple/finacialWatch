@@ -5,6 +5,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface SinaService {
+    /**
+     * @param symbol='sz002095'
+     */
     @GET("CN_MarketData.getKLineData")
     fun getMinStorkData(
         @Query("symbol") symbol: String,

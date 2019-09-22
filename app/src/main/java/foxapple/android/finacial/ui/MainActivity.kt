@@ -8,7 +8,7 @@ import foxapple.android.finacial.R
 import foxapple.android.finacial.data.local.tushare.StockBasicInfoRepository
 import foxapple.android.finacial.usecase.UseCase
 import foxapple.android.finacial.usecase.feature.GetStockBasicInfo
-import foxapple.android.finacial.usecase.feature.GetStockMinData
+import foxapple.android.finacial.usecase.feature.GetStockKLineData
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.Dispatchers
@@ -25,20 +25,20 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-//            getBasicStockInfo()
-            GlobalScope.launch(Dispatchers.IO){
-                GetStockMinData().invoke(UseCase.None()) {
-                    Log.d(tag, it.toString())
-                }
-                GetStockBasicInfo().invoke(UseCase.None()) {
-                    Log.d(tag, it.toString())
+            GetStockBasicInfo().invoke(UseCase.None()) {
+                it.success { list ->
+                    GetStockKLineData(list[0]).invoke(UseCase.None()) { kLine ->
+                        kLine.success { kLineInfo ->
+                            Log.d(tag, kLineInfo.toString())
+                        }
+                    }
                 }
             }
         }
 
         clear_btn.setOnClickListener {
             stock_basic.text = ""
-            GlobalScope.launch(Dispatchers.IO){
+            GlobalScope.launch(Dispatchers.IO) {
                 StockBasicInfoRepository.getInstance().clear()
             }
         }
