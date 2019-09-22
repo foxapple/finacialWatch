@@ -27,8 +27,8 @@ class GetStockKLineData(private val stock: StockBasicInfo) : UseCase<StockKLineI
             val apiSymbol = stockCode[1].toLowerCase() + stockCode[0]
             val kLineInfo = StockKLineInfo.getKLineInfoFromBasicInfo(stock)
             val result = getKLineDataRemote(apiSymbol, kLineInfo)
-            result.success {
-                StockKLineInfoRepository.getInstance().insertStock(it)
+            if(result.isRight) {
+                StockKLineInfoRepository.getInstance().insertStock((result as Either.Right).b)
             }
             return result
         } else {

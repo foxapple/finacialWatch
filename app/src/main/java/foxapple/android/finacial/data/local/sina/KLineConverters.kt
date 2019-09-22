@@ -19,6 +19,6 @@ class KLineConverters {
 
     @TypeConverter
     fun objectToString(list: List<KLineDetailData>): String {
-        return gson.toJson(list)
+        return Gson().toJson(list)
     }
 }

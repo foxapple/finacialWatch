@@ -22,5 +22,12 @@ abstract class UseCase<out Type, in Params> where Type : Any {
         GlobalScope.launch(Dispatchers.Main) { onResult(job.await()) }
     }
 
+    fun invokeWithSuccess(params: Params, onSuccess: (Type) -> Unit = {}) {
+        val job = GlobalScope.async(Dispatchers.IO) { run(params) }
+        GlobalScope.launch(Dispatchers.Main) {
+            job.await().success { onSuccess(it) }
+        }
+    }
+
     class None
 }

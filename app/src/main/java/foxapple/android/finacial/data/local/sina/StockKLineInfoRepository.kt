@@ -19,8 +19,8 @@ class StockKLineInfoRepository private constructor(private val stockKLineDao: St
     fun getStockKLineInfos() = stockKLineDao.getAllStorks()
 
     @Synchronized
-    fun insertStock(data: StockKLineInfo) {
-        GlobalScope.launch(Dispatchers.IO) { stockKLineDao.insertStockBasicInfo(data) }
+    suspend fun insertStock(data: StockKLineInfo) {
+        stockKLineDao.insertStockBasicInfo(data)
     }
 
     @Synchronized

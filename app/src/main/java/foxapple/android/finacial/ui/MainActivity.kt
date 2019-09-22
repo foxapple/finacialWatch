@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import foxapple.android.finacial.R
 import foxapple.android.finacial.data.local.tushare.StockBasicInfoRepository
 import foxapple.android.finacial.usecase.UseCase
+import foxapple.android.finacial.usecase.feature.ComputeMAData
 import foxapple.android.finacial.usecase.feature.GetStockBasicInfo
 import foxapple.android.finacial.usecase.feature.GetStockKLineData
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,12 +26,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            GetStockBasicInfo().invoke(UseCase.None()) {
-                it.success { list ->
-                    GetStockKLineData(list[0]).invoke(UseCase.None()) { kLine ->
-                        kLine.success { kLineInfo ->
-                            Log.d(tag, kLineInfo.toString())
-                        }
+            GetStockBasicInfo().invokeWithSuccess(UseCase.None()) { list ->
+                GetStockKLineData(list[0]).invokeWithSuccess(UseCase.None()) { kLine ->
+                    ComputeMAData().invokeWithSuccess(kLine) {
+                        Log.d(tag, it.day_data.takeLast(10).toString())
                     }
                 }
             }
