@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             GetStockBasicInfo().invokeWithSuccess(UseCase.None()) { list ->
                 GetStockKLineData(list[0]).invokeWithSuccess(UseCase.None()) { kLine ->
                     ComputeMAData().invokeWithSuccess(kLine) {
+                        Log.d(tag, it.name)
                         Log.d(tag, it.day_data.takeLast(10).toString())
                     }
                 }

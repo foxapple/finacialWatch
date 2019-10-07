@@ -22,7 +22,7 @@ val AvailableMinData = listOf(5, 30, 60, 240)
 class GetStockKLineData(private val stock: StockBasicInfo) : UseCase<StockKLineInfo, UseCase.None>() {
     override suspend fun run(params: None): Either<Failure, StockKLineInfo> {
         val data = StockKLineInfoRepository.getInstance().getStockKLineInfoById(stock.ts_code)
-        return if (data == null || isToday(data.updateDate)) {
+        return if (data == null || !isToday(data.updateDate)) {
             val stockCode = stock.ts_code.split('.')
             val apiSymbol = stockCode[1].toLowerCase() + stockCode[0]
             val kLineInfo = StockKLineInfo.getKLineInfoFromBasicInfo(stock)
@@ -55,7 +55,7 @@ class GetStockKLineData(private val stock: StockBasicInfo) : UseCase<StockKLineI
     private fun transSinaRespond2KLineDetailData(response: SinaResponseVO): KLineDetailData {
         return KLineDetailData(
             DateString2TimeStamp(response.day), response.open, response.high, response.low, response.close,
-            response.volume, HashMap(), MACD()
+            response.volume, HashMap(), MACD(0f,0f,0f,0f)
         )
     }
 }

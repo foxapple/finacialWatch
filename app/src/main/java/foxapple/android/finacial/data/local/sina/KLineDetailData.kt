@@ -35,6 +35,18 @@ enum class MovingAverageData(val average: Int) {
     MA_144(144)
 }
 
+/**
+ *  12日EMA＝2÷13×（今天收盘指数一昨天的指数平均值）＋昨天的指数平均值。
+ *  26日EMA＝（2÷27）×今天收盘指数＋（25÷27）×昨天的指数平均值。
+ *  DIFF=今日EMA（12）- 今日EMA（26）
+ *  DEA（MACD）= 前一日DEA×8/10＋今日DIF×2/10
+ *             = DIFF 的 9日EMA
+ */
 class MACD(
-    
-) : Serializable
+    val EMA_12: Float, val EMA_26: Float, val DIFF: Float, val DEA: Float
+) : Serializable {
+    val macd = (DIFF - DEA) * 2f
+    override fun toString(): String {
+        return "MACD(DIFF=$DIFF, DEA=$DEA, MACD=$macd)"
+    }
+}
