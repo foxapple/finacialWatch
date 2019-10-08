@@ -1,6 +1,5 @@
 package foxapple.android.finacial.usecase.feature
 
-import foxapple.android.finacial.data.local.AppDatabase
 import foxapple.android.finacial.data.local.sina.KLineDetailData
 import foxapple.android.finacial.data.local.sina.MACD
 import foxapple.android.finacial.data.local.sina.StockKLineInfo
@@ -27,7 +26,7 @@ class GetStockKLineData(private val stock: StockBasicInfo) : UseCase<StockKLineI
             val apiSymbol = stockCode[1].toLowerCase() + stockCode[0]
             val kLineInfo = StockKLineInfo.getKLineInfoFromBasicInfo(stock)
             val result = getKLineDataRemote(apiSymbol, kLineInfo)
-            if(result.isRight) {
+            if (result.isRight) {
                 StockKLineInfoRepository.getInstance().insertStock((result as Either.Right).b)
             }
             return result
@@ -55,7 +54,7 @@ class GetStockKLineData(private val stock: StockBasicInfo) : UseCase<StockKLineI
     private fun transSinaRespond2KLineDetailData(response: SinaResponseVO): KLineDetailData {
         return KLineDetailData(
             DateString2TimeStamp(response.day), response.open, response.high, response.low, response.close,
-            response.volume, HashMap(), MACD(0f,0f,0f,0f)
+            response.volume, HashMap(), MACD(0f, 0f, 0f, 0f)
         )
     }
 }
