@@ -18,7 +18,8 @@ val AvailableMinData = listOf(5, 30, 60, 240)
 /**
  * @param symbol='000001.SZ'
  */
-class GetStockKLineData(private val stock: StockBasicInfo) : UseCase<StockKLineInfo, UseCase.None>() {
+class GetStockKLineData(private val stock: StockBasicInfo) :
+    UseCase<StockKLineInfo, UseCase.None>() {
     override suspend fun run(params: None): Either<Failure, StockKLineInfo> {
         val data = StockKLineInfoRepository.getInstance().getStockKLineInfoById(stock.ts_code)
         return if (data == null || !isToday(data.updateDate)) {
@@ -35,16 +36,25 @@ class GetStockKLineData(private val stock: StockBasicInfo) : UseCase<StockKLineI
         }
     }
 
-    private fun getKLineDataRemote(apiSymbol: String, kLineInfo: StockKLineInfo): Either<Failure, StockKLineInfo> {
+    private fun getKLineDataRemote(
+        apiSymbol: String,
+        kLineInfo: StockKLineInfo
+    ): Either<Failure, StockKLineInfo> {
         AvailableMinData.forEach { scale ->
-            val response = Retrofit2Service.SINA_API.getMinStorkData(apiSymbol, scale.toString(), "no").execute()
-            if (response.isSuccessful) {
-                val data = response.body()
-                data.forEach { singleDay ->
-                    val kLine = transSinaRespond2KLineDetailData(singleDay)
-                    kLineInfo.getKLineListByScale(scale).add(kLine)
+            try {
+                val response =
+                    Retrofit2Service.SINA_API.getMinStorkData(apiSymbol, scale.toString(), "no")
+                        .execute()
+                if (response.isSuccessful) {
+                    val data = response.body()
+                    data.forEach { singleDay ->
+                        val kLine = transSinaRespond2KLineDetailData(singleDay)
+                        kLineInfo.getKLineListByScale(scale).add(kLine)
+                    }
+                } else {
+                    return Either.Left(Failure.ServerError)
                 }
-            } else {
+            } catch (e: Exception) {
                 return Either.Left(Failure.ServerError)
             }
         }
@@ -53,8 +63,14 @@ class GetStockKLineData(private val stock: StockBasicInfo) : UseCase<StockKLineI
 
     private fun transSinaRespond2KLineDetailData(response: SinaResponseVO): KLineDetailData {
         return KLineDetailData(
-            DateString2TimeStamp(response.day), response.open, response.high, response.low, response.close,
-            response.volume, HashMap(), MACD(0f, 0f, 0f, 0f)
+            DateString2TimeStamp(response.day),
+            response.open,
+            response.high,
+            response.low,
+            response.close,
+            response.volume,
+            HashMap(),
+            MACD(0f, 0f, 0f, 0f)
         )
     }
 }

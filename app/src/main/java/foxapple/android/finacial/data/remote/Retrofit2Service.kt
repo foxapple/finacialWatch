@@ -15,6 +15,6 @@ object Retrofit2Service {
 
     val SINA_API: SinaService = Retrofit.Builder()
         .baseUrl("https://money.finance.sina.com.cn/quotes_service/api/json_v2.php/")
-        .addConverterFactory(MyConverterFactory(Gson()))
+        .addConverterFactory(GsonConverterFactory.create())
         .build().create(SinaService::class.java)
 }

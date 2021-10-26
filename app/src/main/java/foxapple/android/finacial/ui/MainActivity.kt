@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import foxapple.android.finacial.R
+import foxapple.android.finacial.data.ETFOriginData
 import foxapple.android.finacial.data.local.tushare.StockBasicInfoRepository
 import foxapple.android.finacial.usecase.UseCase
 import foxapple.android.finacial.usecase.feature.ComputeMAData
@@ -26,12 +27,10 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            GetStockBasicInfo().invokeWithSuccess(UseCase.None()) { list ->
-                GetStockKLineData(list[0]).invokeWithSuccess(UseCase.None()) { kLine ->
-                    ComputeMAData().invokeWithSuccess(kLine) {
-                        Log.d(tag, it.name)
-                        Log.d(tag, it.day_data.takeLast(10).toString())
-                    }
+            GetStockKLineData(ETFOriginData.getETFDataList()[0]).invokeWithSuccess(UseCase.None()) { kLine ->
+                ComputeMAData().invokeWithSuccess(kLine) {
+                    Log.d(tag, it.name)
+                    Log.d(tag, it.day_data.takeLast(10).toString())
                 }
             }
         }
