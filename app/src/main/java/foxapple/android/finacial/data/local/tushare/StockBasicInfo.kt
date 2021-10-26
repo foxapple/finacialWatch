@@ -19,17 +19,17 @@ data class StockBasicInfo(
     @PrimaryKey @ColumnInfo(name = "id") val ts_code: String,
     val symbol: String,
     val name: String,
-    val area: String,
-    val industry: String,
-    val market: String,
-    val list_date: String
+    val area: String = "",
+    val industry: String = "",
+    val market: String = "",
+    val list_date: String = ""
 ) {
     override fun toString(): String {
         return "StockBasicInfo(ts_code='$ts_code', symbol='$symbol', name='$name', area='$area', industry='$industry', market='$market', list_date='$list_date')"
     }
 }
 
-fun getStockBasicInfoFromStringList(fields: List<String>, datas:List<String>): StockBasicInfo {
+fun getStockBasicInfoFromStringList(fields: List<String>, datas: List<String>): StockBasicInfo {
     return StockBasicInfo(
         datas.getOrNull(fields.indexOf("ts_code")) ?: "",
         datas.getOrNull(fields.indexOf("symbol")) ?: "",

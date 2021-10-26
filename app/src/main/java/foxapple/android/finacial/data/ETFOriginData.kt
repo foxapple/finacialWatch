@@ -11,8 +11,7 @@ object ETFOriginData {
     private val ETFDataList: List<StockBasicInfo>
 
     init {
-        val list = mutableListOf<StockBasicInfo>()
-        list.add(
+        val list = mutableListOf<StockBasicInfo>(
             StockBasicInfo(
                 "510500.SH",
                 "sh510500",
@@ -21,7 +20,13 @@ object ETFOriginData {
                 "中小企业",
                 "上海",
                 ""
-            )
+            ),
+            StockBasicInfo(
+                "510300.SH",
+                "sh510300",
+                "沪深300"
+            ),
+            StockBasicInfo()
         )
 
         ETFDataList = list.toList()
