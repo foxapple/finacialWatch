@@ -12,3 +12,11 @@
 /captures
 .externalNativeBuild
 .cxx
+/.idea/
+*.DS_Store
+/apk/
+/obj/
+/out/
+temp/
+*.pyc
+GradleDependency.txt
