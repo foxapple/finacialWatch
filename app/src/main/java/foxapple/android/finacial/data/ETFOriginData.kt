@@ -26,7 +26,36 @@ object ETFOriginData {
                 "sh510300",
                 "沪深300"
             ),
-            StockBasicInfo()
+            StockBasicInfo(
+                "512010.SH",
+                "sh512010",
+                "医药"
+            ),
+            StockBasicInfo(
+                "512200.SH",
+                "sh512200",
+                "地产"
+            ),
+            StockBasicInfo(
+                "515700.SH",
+                "sh515700",
+                "中概互联"
+            ),
+            StockBasicInfo(
+                "515700.SH",
+                "sh515700",
+                "新能源"
+            ),
+            StockBasicInfo(
+                "515790.SH",
+                "sh515790",
+                "光伏"
+            ),
+            StockBasicInfo(
+                "159928.SZ",
+                "sz159928",
+                "消费"
+            )
         )
 
         ETFDataList = list.toList()
