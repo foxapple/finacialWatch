@@ -15,11 +15,7 @@ object ETFOriginData {
             StockBasicInfo(
                 "510500.SH",
                 "sh510500",
-                "中证500",
-                "上海",
-                "中小企业",
-                "上海",
-                ""
+                "中证500"
             ),
             StockBasicInfo(
                 "510300.SH",
