@@ -30,12 +30,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener {
-            GetStockKLineData(ETFOriginData.getETFDataList()[0]).invokeWithSuccess(UseCase.None()) { kLine ->
-                ComputeMAData().invokeWithSuccess(kLine) {
-                    Log.d(tag, it.name)
-                    Log.d(tag, it.day_data.takeLast(10).toString())
-                }
-            }
+            fetchAllETFData()
         }
 
         clear_btn.setOnClickListener {
@@ -73,12 +68,10 @@ class MainActivity : AppCompatActivity() {
                 val min = kLine.day_data.minBy { it.low }!!.low
                 val current = kLine.day_data.first().close
                 val position = (ln(current) - ln(min)) / (ln(max) - ln(min)) * 100
-                val suggest = 0.00010100750089083607 * position.pow(3)
-                -0.0028596869977607696 * position.pow(2)
-                +0.5242758923580495 * position
-                -1.2199225491198016
+                // 修正建议函数，在最低位时取 100%的仓位  y = 0.0001* x^3 - 0.005 * x^2 + 0.5 * x - 1.2
+                val suggest = 0.00010 * position.pow(3) - 0.005 * position.pow(2) + 0.5 * position - 1.2
                 val etfInfoData = ETFInfoData(
-                    max, min, current, (max + min) / 2, position,
+                    max, min, current, suggest.toFloat(), position,
                     stockInfo
                 )
                 etfList.add(etfInfoData)
