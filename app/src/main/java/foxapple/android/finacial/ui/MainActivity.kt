@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import foxapple.android.finacial.R
+import foxapple.android.finacial.data.ETFInfoData
 import foxapple.android.finacial.data.ETFOriginData
 import foxapple.android.finacial.data.local.tushare.StockBasicInfoRepository
 import foxapple.android.finacial.usecase.UseCase
@@ -17,6 +18,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.ln
+import kotlin.math.pow
 
 class MainActivity : AppCompatActivity() {
     val tag = "MainActivity"
@@ -61,4 +64,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun fetchAllETFData() {
+        val etfList = mutableListOf<ETFInfoData>()
+        ETFOriginData.getETFDataList().forEach { stockInfo ->
+            GetStockKLineData(stockInfo).invokeWithSuccess(UseCase.None()) { kLine ->
+                ComputeMAData().invokeWithSuccess(kLine)
+                val max = kLine.day_data.maxBy { it.high }!!.high
+                val min = kLine.day_data.minBy { it.low }!!.low
+                val current = kLine.day_data.first().close
+                val position = (ln(current) - ln(min)) / (ln(max) - ln(min)) * 100
+                val suggest = 0.00010100750089083607 * position.pow(3)
+                -0.0028596869977607696 * position.pow(2)
+                +0.5242758923580495 * position
+                -1.2199225491198016
+                val etfInfoData = ETFInfoData(
+                    max, min, current, (max + min) / 2, position,
+                    stockInfo
+                )
+                etfList.add(etfInfoData)
+            }
+        }
+    }
 }
